@@ -1,6 +1,8 @@
-# Pecuniary
+# GPS
 
-DESCRIPTION
+Gist Portal System - CS 157A Final Project
+
+Simple messaging system
 
 ## Installation
 
