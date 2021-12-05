@@ -1,8 +1,12 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Navigation from "./views/navigation/navigation";
 import Home from "./views/home/home";
+import Deliver from "./views/deliver/deliver";
+import Log from "./views/logs/logs";
+import Inventory from "./views/inventory/inventory";
+import About from "./views/about/about";
 
 import { AppContainer } from "./App.styles";
 
@@ -10,10 +14,13 @@ const App = () => {
   return (
     <AppContainer>
       <Navigation/>
-      <Home />
-      <Router>
-        <Route exact path="/" component={Home} />
-      </Router>
+      <Routes>
+        <Route exact path="/" element={<Home/>} />
+        <Route exact path="/deliver" element={<Deliver/>} />
+        <Route exact path="/log" element={<Log/>} />
+        <Route exact path="/inventory" element={<Inventory/>} />
+        <Route exact path="/about" element={<About/>} />
+      </Routes>
     </AppContainer>
   );
 }

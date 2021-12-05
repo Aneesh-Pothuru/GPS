@@ -1,15 +1,19 @@
 import React from "react";
 import logo from "../../assets/logo.png"
-import Button from "../../components/button/button";
-import { HomeContainer, Logo } from "./home.styles";
+import { useNavigate } from "react-router-dom";
+import { HomeContainer, Logo, Options, StyledButton } from "./home.styles";
 
 const Home = () => {
+    const navigate = useNavigate();
     return(
         <HomeContainer>
-            <Logo src={logo} alt="GPS"/>
+            <Logo src={logo} alt="GPS" />
             <p>Simple Delivery and Log System</p>
-            <Button label="Deliver Items" />
-            <Button label="Check Logs" />
+            <Options>
+                <StyledButton label="Deliver Items" onClick={() => navigate('/deliver')} />
+                <StyledButton label="Read Logs" onClick={() => navigate('/log')}/>
+                <StyledButton label="Check Inventory" onClick={() => navigate('/inventory')}/>
+            </Options>
         </HomeContainer>
     )
 }
