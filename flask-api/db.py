@@ -126,5 +126,11 @@ if __name__ == '__main__':
 
     print(executer.list_tables())
 
+    # executer.insert_into("location", 
+    #                         ("824 Hemmingway Drive", "95032", "United States", "CA"), 
+    #                         columns = ("address", "zip_code", "country", "state"))
+
+    print(executer.fetch_data("location"))
+
     executer.commit()
     executer.close_connection()
