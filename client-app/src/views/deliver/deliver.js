@@ -38,7 +38,7 @@ const Deliver = () => {
     };
 
     const onDeliverRequest = () => {
-        deliverItem(user, streetAddress, zipCode, state, product)
+        deliverItem(user, streetAddress, zipCode, state, country, product)
         .then().catch((error) => {
             alert("Something went wrong, Recorded " + error);
         });
