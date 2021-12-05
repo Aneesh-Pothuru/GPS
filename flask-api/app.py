@@ -69,7 +69,7 @@ def insert_order():
     return jsonify(ret_dict)
 
 
-@app.route('/api/logs', methods=['GET'])
+@app.route('/api/logs', methods=['POST'])
 def get_view():
     key = request.form["key"]
     ex = Executer("shipping_db.sqlite")
