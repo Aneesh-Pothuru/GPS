@@ -39,7 +39,12 @@ const Deliver = () => {
 
     const onDeliverRequest = () => {
         deliverItem(user, streetAddress, zipCode, state, country, product)
-        .catch((error) => {
+        .then((response) => 
+        {
+            if(response.data.success === true){
+                alert("Delivered!");
+            } 
+        }).catch((error) => {
             alert("Something went wrong, Recorded " + error);
         });
     };
