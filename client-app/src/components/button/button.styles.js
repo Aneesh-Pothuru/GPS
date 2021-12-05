@@ -6,19 +6,19 @@ export const StyledButton = styled.button`
   letter-spacing: 0.5px;
   line-height: 35px;
   padding: 0 15px 0 15px;
-  font-size: 15px;
-  background-color: #9836f6;
+  font-size: 20px;
+  background-color: #063D54;
   color: white;
   font-weight: bolder;
-  border: 1px solid #011f30;
+  border: 1px solid #282C34;
   cursor: pointer;
   display: flex;
   justify-content: center;
   border-radius: 10px;
   &:hover {
-    background-color: #6423a1;
+    background-color: #00B0C0;
     color: white;
-    border: 1px solid #011f30;
+    border: 1px solid #047C88;
     transition: background-color 0.5s ease-out;
   }
 `;
