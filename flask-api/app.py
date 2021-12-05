@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import json
 import os
-# from flaskext.mysql import MySQL
 
 # mysql = MySQL()
 app = Flask(__name__, static_folder='../client-app/build', static_url_path='/')
