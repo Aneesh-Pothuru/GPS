@@ -9,9 +9,11 @@ cors = CORS(app)
 
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+
 @app.route('/')
 def index():
-	return app.send_static_file('index.html')
+    return app.send_static_file('index.html')
+
 
 @app.route('/api/deliver', methods=['POST'])
 def insert_order():
@@ -32,7 +34,7 @@ def insert_order():
                     zip_code,
                     country,
                     state),
-                   columns=("address_id"
+                   columns=("address_id",
                             "address",
                             "zip_code",
                             "country",
@@ -42,16 +44,21 @@ def insert_order():
         ex.insert_into("orders",
                        (username,
                         location_id,
-                        product_id))
+                        product_id),
+                       columns=("username",
+                                "address_id",
+                                "product_id")
+                       )
 
         ret_dict = {"status": 200,
                     "success": True,
                     "error": None}
 
-    except Exception:
+    except:
+
 
         ex.delete_from_table("location",
-                             "WHERE address_id = {}".format(location_id))
+                             "WHERE address_id = {}".format('"' + location_id + '"'))
 
         ret_dict = {"status": 500,
                     "success": False,
