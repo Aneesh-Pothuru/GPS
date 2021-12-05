@@ -10,14 +10,14 @@ class Executer:
     def insert_table(self,
                      table_name: str,
                      *args) -> None:
-        execution_string = "CREATE TABLE IF NOT EXISTS " + table_name.upper() + "("
+        execution_string = "CREATE TABLE IF NOT EXISTS " + table_name + "("
 
         for i in args:
-            execution_string += i.upper() + ", "
+            execution_string += i + ", "
 
         execution_string = execution_string[:-2] + ");"
 
-        self.__cursor.execute(execution_string)
+        self.__cursor.execute(execution_string.upper())
 
     def list_tables(self) -> list:
         command = "SELECT name FROM sqlite_master WHERE type='table';"
@@ -29,40 +29,43 @@ class Executer:
                     values: tuple,
                     columns=None):
 
-        base_string = "INSERT INTO " + table_name.upper()
+        base_string = "INSERT INTO " + table_name
 
         if columns is not None:
-            base_string += str(columns).upper()
+            base_string += str(columns)
+            if len(columns) == 1:
+                base_string = base_string[:-2] + ")"
 
-        base_string += " VALUES" + " " + str(values).upper() + ";"
+        if len(values) == 1:
+            base_string += " VALUES" + " " + str(values)
+            base_string = base_string[:-2] + ");"
+        else:
+            base_string += " VALUES" + " " + str(values) + ";"
 
-        print(base_string)
-
-        self.__cursor.execute(base_string)
+        self.__cursor.execute(base_string.upper())
 
     def fetch_data(self,
                    table: str,
                    *args,
-                   select_col= None):
+                   select_col=None):
 
         base_str = "SELECT"
         if select_col is None:
             base_str += " *"
         else:
-            base_str += "("
+            base_str += " "
             for i in select_col:
                 base_str += i + ", "
+            base_str = base_str[:-2]
 
-            
-        base_str = base_str[:-2] + ")"
         base_str += " FROM {}".format(table)
 
         for i in args:
             base_str += " " + i
 
-        print(base_str.upper())
+        print(base_str)
 
-        self.__cursor.execute(base_str.upper())
+        self.__cursor.execute(base_str.upper() + ";")
 
         return self.__cursor.fetchall()
 
@@ -120,50 +123,47 @@ if __name__ == '__main__':
 
     print(executer.list_tables())
 
-    executer.insert_into("location", 
-                            ("824 Hemmingway Drive", "95032", "United States", "CA"), 
-                            columns = ("address", "zip_code", "country", "state"))
+    executer.insert_into("location",
+                         ("824 Hemmingway Drive", "95032", "United States", "CA"),
+                         columns=("address", "zip_code", "country", "state"))
 
-    executer.insert_into("location", 
-                            ("87 Cromwell Lane", "92374", "United States", "CA"), 
-                            columns = ("address", "zip_code", "country", "state"))
+    executer.insert_into("location",
+                         ("87 Cromwell Lane", "92374", "United States", "CA"),
+                         columns=("address", "zip_code", "country", "state"))
 
-    executer.insert_into("location", 
-                            ("243 Lincoln Ave", "25304", "United States", "GA"), 
-                            columns = ("address", "zip_code", "country", "state"))
+    executer.insert_into("location",
+                         ("243 Lincoln Ave", "25304", "United States", "GA"),
+                         columns=("address", "zip_code", "country", "state"))
 
-    executer.insert_into("roles", 
-                            ("admin"), 
-                            columns = ("description"))   
+    executer.insert_into("roles",
+                         ("admin",),
+                         columns=("description",))
 
-    executer.insert_into("roles", 
-                            ("shipper"), 
-                            columns = ("description"))
+    executer.insert_into("roles",
+                         ("shipper",),
+                         columns=("description",))
 
-    executer.insert_into("roles", 
-                            ("recipient"), 
-                            columns = ("description"))  
+    executer.insert_into("roles",
+                         ("recipient",),
+                         columns=("description",))
 
-    executer.insert_into("user", 
-                            ("1", "1", "John", "Doe"),
-                            columns = ("role_id", "location_id", "first_name", "last_name"))
+    executer.insert_into("user",
+                         ("1", "1", "John", "Doe"),
+                         columns=("role_id", "location_id", "first_name", "last_name"))
 
-    executer.insert_into("user", 
-                            ("2", "1", "Mary", "Sue"),
-                            columns = ("role_id", "location_id", "first_name", "last_name"))
+    executer.insert_into("user",
+                         ("2", "1", "Mary", "Sue"),
+                         columns=("role_id", "location_id", "first_name", "last_name"))
 
-    executer.insert_into("user", 
-                            ("3", "2", "Nagi", "Ramen"),
-                            columns = ("role_id", "location_id", "first_name", "last_name"))
+    executer.insert_into("user",
+                         ("3", "2", "Nagi", "Ramen"),
+                         columns=("role_id", "location_id", "first_name", "last_name"))
 
-    executer.insert_into("product", 
-                            ("1", "3", "Sriram", "Govindan"),
-                            columns = ("role_id", "location_id", "first_name", "last_name"))
+    executer.insert_into("user",
+                         ("1", "3", "Sriram", "Govindan"),
+                         columns=("role_id", "location_id", "first_name", "last_name"))
 
+    print(executer.fetch_data("location", select_col=("address", "zip_code", "country")))
 
-
-    # print(executer.fetch_data("location", select_col = ("location_id",)))
-    # print(executer.fetch_data("user"))
-
-    executer.commit()
+    # executer.commit()
     executer.close_connection()
