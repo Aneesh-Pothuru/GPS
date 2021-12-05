@@ -1,8 +1,8 @@
 # GPS
 
-Gist Portal System - CS 157A Final Project
+General Packaging System - CS 157A Final Project
 
-Simple messaging system
+Simple logistics application
 
 ## Installation
 
