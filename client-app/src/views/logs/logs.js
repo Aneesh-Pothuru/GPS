@@ -17,7 +17,6 @@ const Logs = () => {
     const onRequest = () => {
         checkLogs(key).then(
             (response) => {
-                console.log(response);
                 setLogs(response.data);
             }
         ).catch((error) => 
