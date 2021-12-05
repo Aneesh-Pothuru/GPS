@@ -1,32 +1,103 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS, cross_origin
-import json
+from flask_cors import CORS
+from db import Executer
+import uuid
 import os
 
-# mysql = MySQL()
 app = Flask(__name__, static_folder='../client-app/build', static_url_path='/')
 cors = CORS(app)
-# app.config['MYSQL_DATABASE_USER'] = 'root'
-# app.config['MYSQL_DATABASE_PASSWORD'] = 'password'
-# app.config['MYSQL_DATABASE_DB'] = 'flaskpy'
-# app.config['MYSQL_DATABASE_HOST'] = 'pysql'
-# mysql.init_app(app)
-# con = mysql.connect()
+
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-@app.route('/')
-def index():
-    return 'hello world'
 
-@app.route('/postgres/', methods=['POST'])
-def insert():
+@app.route('/api/deliver', methods=['POST'])
+def insert_order():
+    username = request.form["username"]
+    product_id = request.form["productName"]
+    street_address = request.form["streetAddress"]
+    zip_code = request.form["zipCode"]
+    country = request.form["country"]
+    state = request.form["state"]
 
-    return 'something something data inserted'
+    ex = Executer("shipping_db.sqlite")
 
-@app.route('/postgres/', methods=['GET'])
-def retrieve():
+    location_id = str(uuid.uuid4())
 
-    return 'something something data retrieved'
+    ex.insert_into("location",
+                   (location_id,
+                    street_address,
+                    zip_code,
+                    country,
+                    state),
+                   columns=("address_id"
+                            "address",
+                            "zip_code",
+                            "country",
+                            "state"))
+
+    try:
+        ex.insert_into("orders",
+                       (username,
+                        location_id,
+                        product_id))
+
+        ret_dict = {"status": 200,
+                    "success": True,
+                    "error": None}
+
+    except Exception:
+
+        ex.delete_from_table("location",
+                             "WHERE address_id = {}".format(location_id))
+
+        ret_dict = {"status": 500,
+                    "success": False,
+                    "error": "Username in use"}
+
+    ex.commit()
+    ex.close_connection()
+
+    return jsonify(ret_dict)
+
+
+@app.route("/api/inventory/", methods=["POST"])
+def insert_product():
+    product_id = str(uuid.uuid4())
+    product_name = request.form["name"]
+    product_weight = request.form["weight"]
+    product_width = request.form["width"]
+    product_length = request.form["len"]
+    product_height = request.form["height"]
+
+    ex = Executer("shipping_db.sqlite")
+
+    ex.insert_into("product",
+                   (product_id,
+                    product_name,
+                    product_weight,
+                    product_width,
+                    product_length,
+                    product_height),
+                   columns=None)
+
+    ex.commit()
+    ex.close_connection()
+
+    return jsonify({"status": 200,
+                    "success": True,
+                    "error": None})
+
+
+@app.route("/api/inventory/products", methods=["GET"])
+def get_products():
+    ex = Executer("shipping_db.sqlite")
+
+    data = ex.fetch_data("product")
+
+    ex.commit()
+    ex.close_connection()
+
+    return jsonify(data[-1])
 
 
 if __name__ == "__main__":
