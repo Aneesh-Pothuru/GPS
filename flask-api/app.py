@@ -56,7 +56,6 @@ def insert_order():
 
     except:
 
-
         ex.delete_from_table("location",
                              "WHERE address_id = {}".format('"' + location_id + '"'))
 
@@ -68,6 +67,45 @@ def insert_order():
     ex.close_connection()
 
     return jsonify(ret_dict)
+
+
+@app.route('/api/logs', methods=['GET'])
+def get_view():
+    key = request.form["key"]
+    ex = Executer("shipping_db.sqlite")
+
+    if key.upper() == "ADMIN":
+        data = ex.fetch_data("ADMIN_VIEW")[-1]
+        columns = ["id", "username", "address_id", "product_id", "date_created"]
+        data_list = []
+        for i in data:
+            data_list.append({columns[0]: i[0],
+                              columns[1]: i[1],
+                              columns[2]: i[2],
+                              columns[3]: i[3],
+                              columns[4]: i[4]})
+
+    elif key.upper() == "RECIPIENT":
+        data = ex.fetch_data("User_View")[-1]
+        columns = ["username", "product_id", "date_created"]
+        data_list = []
+        for i in data:
+            data_list.append({columns[0]: i[0],
+                              columns[1]: i[1],
+                              columns[2]: i[2]})
+
+    else:
+        data = ex.fetch_data("Shipper_View")[-1]
+        columns = ["address_id", "product_id", "date_created"]
+        data_list = []
+        for i in data:
+            data_list.append({columns[0]: i[0],
+                              columns[1]: i[1],
+                              columns[2]: i[2]})
+
+    ex.commit()
+    ex.close_connection()
+    return jsonify(data_list)
 
 
 @app.route("/api/inventory/add", methods=["POST"])
