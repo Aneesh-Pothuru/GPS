@@ -9,6 +9,9 @@ cors = CORS(app)
 
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+@app.route('/')
+def index():
+	return app.send_static_file('index.html')
 
 @app.route('/api/deliver', methods=['POST'])
 def insert_order():
@@ -60,7 +63,7 @@ def insert_order():
     return jsonify(ret_dict)
 
 
-@app.route("/api/inventory/", methods=["POST"])
+@app.route("/api/inventory/add", methods=["POST"])
 def insert_product():
     product_id = str(uuid.uuid4())
     product_name = request.form["name"]

@@ -16,7 +16,6 @@ const Navigation = () => {
           <LinkStyled to="/log">Logs</LinkStyled>
         </LeftOptions>
         <RightOptions>
-          <LinkStyled to="/about">About</LinkStyled>
         </RightOptions>
       </Header>
     );

@@ -27,3 +27,4 @@ yarn-error.log*
 env
 .idea/
 shipping_db.sqlite
+__pycache__/

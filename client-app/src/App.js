@@ -6,7 +6,6 @@ import Home from "./views/home/home";
 import Deliver from "./views/deliver/deliver";
 import Log from "./views/logs/logs";
 import Inventory from "./views/inventory/inventory";
-import About from "./views/about/about";
 
 import { AppContainer } from "./App.styles";
 
@@ -19,7 +18,6 @@ const App = () => {
         <Route exact path="/deliver" element={<Deliver/>} />
         <Route exact path="/log" element={<Log/>} />
         <Route exact path="/inventory" element={<Inventory/>} />
-        <Route exact path="/about" element={<About/>} />
       </Routes>
     </AppContainer>
   );
