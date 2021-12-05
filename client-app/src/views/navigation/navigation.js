@@ -11,9 +11,9 @@ const Navigation = () => {
       <Header>
         <LeftOptions>
           <LinkStyled to="/">Home</LinkStyled>
+          <LinkStyled to="/inventory">Inventory</LinkStyled>
           <LinkStyled to="/deliver">Deliver</LinkStyled>
           <LinkStyled to="/log">Logs</LinkStyled>
-          <LinkStyled to="/inventory">Inventory</LinkStyled>
         </LeftOptions>
         <RightOptions>
           <LinkStyled to="/about">About</LinkStyled>

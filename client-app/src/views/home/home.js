@@ -10,9 +10,9 @@ const Home = () => {
             <Logo src={logo} alt="GPS" />
             <p>Simple Delivery and Log System</p>
             <Options>
+                <StyledButton label="Check Inventory" onClick={() => navigate('/inventory')}/>
                 <StyledButton label="Deliver Items" onClick={() => navigate('/deliver')} />
                 <StyledButton label="Read Logs" onClick={() => navigate('/log')}/>
-                <StyledButton label="Check Inventory" onClick={() => navigate('/inventory')}/>
             </Options>
         </HomeContainer>
     )
