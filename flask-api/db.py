@@ -36,6 +36,8 @@ class Executer:
 
         base_string += " VALUES" + " " + str(values).upper() + ";"
 
+        print(base_string)
+
         self.__cursor.execute(base_string)
 
     def fetch_data(self,
@@ -47,12 +49,18 @@ class Executer:
         if select_col is None:
             base_str += " *"
         else:
-            base_str += str(select_col)[1: -2]
+            base_str += "("
+            for i in select_col:
+                base_str += i + ", "
 
+            
+        base_str = base_str[:-2] + ")"
         base_str += " FROM {}".format(table)
 
         for i in args:
             base_str += " " + i
+
+        print(base_str.upper())
 
         self.__cursor.execute(base_str.upper())
 
@@ -68,63 +76,94 @@ class Executer:
 if __name__ == '__main__':
     executer = Executer("shipping_db.sqlite")
 
-    command_list = ["location_id INTEGER PRIMARY KEY AUTOINCREMENT",
-                    "address VARCHAR(50) NOT NULL",
+    command_list = ["address VARCHAR(50) NOT NULL",
                     "zip_code VARCHAR(10) NOT NULL",
                     "country VARCHAR(50) NOT NULL",
-                    "state VARCHAR(2)"]
+                    "state VARCHAR(2)",
+                    "CONSTRAINT location_id PRIMARY KEY (address, zip_code, country, state)"]
 
     executer.insert_table("LOCATION", *command_list)
 
+    command_list = ["role_id INTEGER PRIMARY KEY AUTOINCREMENT",
+                    "description VARCHAR(50) NOT NULL"]
+
+    executer.insert_table("roles", *command_list)
+
     command_list = ["user_id INTEGER PRIMARY KEY AUTOINCREMENT",
+                    "role_id INTEGER NOT NULL",
                     "location_id Integer not null",
-                    "username VARCHAR(50) NOT NULL",
-                    "password VARCHAR(50) NOT NULL",
                     "first_name VARCHAR(50) NOT NULL",
                     "last_name VARCHAR(50) NOT NULL",
-                    "FOREIGN KEY(location_id) REFERENCES location(location_id)"]
+                    "FOREIGN KEY(location_id) REFERENCES location(location_id)",
+                    "FOREIGN KEY(role_id) REFERENCES roles(role_id)"]
 
     executer.insert_table("user", *command_list)
 
-    command_list = ["recipient_id INTEGER PRIMARY KEY AUTOINCREMENT",
-                    "first_name VARCHAR(50) NOT NULL",
-                    "last_name VARCHAR(50) NOT NULL"]
-
-    executer.insert_table("RECIPIENT", *command_list)
-
-    command_list = ["item_id INTEGER PRIMARY KEY AUTOINCREMENT",
+    command_list = ["product_id INTEGER PRIMARY KEY AUTOINCREMENT",
                     "name VARCHAR(50) NOT NULL",
                     "weight INTEGER NOT NULL",
                     "width INTEGER NOT NULL",
                     "length INTEGER NOT NULL",
                     "height INTEGER NOT NULL"]
 
-    executer.insert_table("item", *command_list)
+    executer.insert_table("product", *command_list)
 
     command_list = ["order_id INTEGER PRIMARY KEY AUTOINCREMENT",
-                    "sender_id INTEGER NOT NULL",
                     "recipient_id INTEGER NOT NULL",
-                    "item_id INTEGER NOT NULL",
+                    "product_id INTEGER NOT NULL",
                     "item_quantity INTEGER NOT NULL",
-                    "box_quantity INTEGER NOT NULL",
-                    "box_size INTEGER NOT NULL",
-                    "FOREIGN KEY (sender_id) REFERENCES user(user_id)",
-                    "FOREIGN KEY (recipient_id) REFERENCES recipient(recipient_id)",
-                    "FOREIGN KEY (item_id) REFERENCES item(item_id)"]
+                    "date_created DATE NOT NULL",
+                    "FOREIGN KEY (recipient_id) REFERENCES user(user_id)",
+                    "FOREIGN KEY (product_id) REFERENCES product(product_id)"]
 
-    executer.insert_table("Orders", *command_list)
-
-    command_list = ["order_book_id INTEGER PRIMARY KEY AUTOINCREMENT",
-                    "order_id INTEGER NOT NULL",
-                    "user_id INTEGER NOT NULL",
-                    "date_created VARCHAR(50) NOT NULL",
-                    "item_quantity INTEGER NOT NULL",
-                    "FOREIGN KEY (order_id) REFERENCES Orders(order_id)",
-                    "FOREIGN KEY (user_id) REFERENCES user(user_id)"]
-
-    executer.insert_table("order_book ", *command_list)
+    executer.insert_table("orders", *command_list)
 
     print(executer.list_tables())
+
+    executer.insert_into("location", 
+                            ("824 Hemmingway Drive", "95032", "United States", "CA"), 
+                            columns = ("address", "zip_code", "country", "state"))
+
+    executer.insert_into("location", 
+                            ("87 Cromwell Lane", "92374", "United States", "CA"), 
+                            columns = ("address", "zip_code", "country", "state"))
+
+    executer.insert_into("location", 
+                            ("243 Lincoln Ave", "25304", "United States", "GA"), 
+                            columns = ("address", "zip_code", "country", "state"))
+
+    executer.insert_into("roles", 
+                            ("admin"), 
+                            columns = ("description"))   
+
+    executer.insert_into("roles", 
+                            ("shipper"), 
+                            columns = ("description"))
+
+    executer.insert_into("roles", 
+                            ("recipient"), 
+                            columns = ("description"))  
+
+    executer.insert_into("user", 
+                            ("1", "1", "John", "Doe"),
+                            columns = ("role_id", "location_id", "first_name", "last_name"))
+
+    executer.insert_into("user", 
+                            ("2", "1", "Mary", "Sue"),
+                            columns = ("role_id", "location_id", "first_name", "last_name"))
+
+    executer.insert_into("user", 
+                            ("3", "2", "Nagi", "Ramen"),
+                            columns = ("role_id", "location_id", "first_name", "last_name"))
+
+    executer.insert_into("product", 
+                            ("1", "3", "Sriram", "Govindan"),
+                            columns = ("role_id", "location_id", "first_name", "last_name"))
+
+
+
+    # print(executer.fetch_data("location", select_col = ("location_id",)))
+    # print(executer.fetch_data("user"))
 
     executer.commit()
     executer.close_connection()
