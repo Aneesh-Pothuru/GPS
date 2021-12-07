@@ -144,6 +144,11 @@ if __name__ == '__main__':
 
     executer.insert_table("orders", *command_list)
 
+    print("Created {}, {}, {}, and {} tables".format("LOCATION",
+                                                     "ROLES",
+                                                     "PRODUCT",
+                                                     "ORDERS"))
+
     # ---------------------------------------------------------------------------------------------
 
     location_1 = str(uuid.uuid4())
@@ -198,6 +203,8 @@ if __name__ == '__main__':
                                   "zip_code",
                                   "country",
                                   "state"))
+
+    print("Inserted data into the {} table".format("LOCATION"))
     # ---------------------------------------------------------------------------------------------
     product_1 = str(uuid.uuid4())
     product_2 = str(uuid.uuid4())
@@ -230,6 +237,7 @@ if __name__ == '__main__':
                           1),
                          columns=None)
 
+    print("Inserted data into the {} table".format("PRODUCT"))
     # ----------------------------------------------------------------------------------------------
 
     executer.insert_into("roles",
@@ -244,6 +252,7 @@ if __name__ == '__main__':
                          ("Recipient", "access to order and username", "recipient"),
                          columns=None)
 
+    print("Inserted data into the {} table".format("ROLES"))
     # ----------------------------------------------------------------------------------------------
 
     executer.insert_into("orders",
@@ -278,6 +287,7 @@ if __name__ == '__main__':
                                   "address_id",
                                   "product_id"))
 
+    print("Inserted data into the {} table".format("ORDERS"))
     # --------------------------------------------------------------------------------------------------------
     executer.make_view("Admin_View",
                        "orders",
@@ -301,3 +311,8 @@ if __name__ == '__main__':
 
     executer.commit()
     executer.close_connection()
+
+    print("Created the {}, {}, and {} views".format("ADMIN",
+                                                    "USER",
+                                                    "SHIPPER"))
+
